@@ -89,6 +89,12 @@ export async function writeFile(path: string, content: string): Promise<void> {
   await client.put(buffer, path);
 }
 
+export async function writeFileBase64(path: string, base64Content: string): Promise<void> {
+  const client = await getClient();
+  const buffer = Buffer.from(base64Content, 'base64');
+  await client.put(buffer, path);
+}
+
 export async function deleteFile(path: string): Promise<void> {
   const client = await getClient();
   await client.delete(path);

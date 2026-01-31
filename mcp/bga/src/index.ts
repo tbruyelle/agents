@@ -79,6 +79,24 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       {
+        name: 'sftp_write_base64',
+        description: 'Write a binary file (image, etc.) to BGA Studio using base64 encoding',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            path: {
+              type: 'string',
+              description: 'File path to write (e.g., "/mygame/img/board.jpg")',
+            },
+            content: {
+              type: 'string',
+              description: 'Base64-encoded content of the file',
+            },
+          },
+          required: ['path', 'content'],
+        },
+      },
+      {
         name: 'sftp_delete',
         description: 'Delete a file from BGA Studio',
         inputSchema: {
@@ -193,6 +211,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const content = args?.content as string;
         await sftp.writeFile(path, content);
         return { content: [{ type: 'text', text: `Successfully wrote to ${path}` }] };
+      }
+
+      case 'sftp_write_base64': {
+        const path = args?.path as string;
+        const content = args?.content as string;
+        await sftp.writeFileBase64(path, content);
+        return { content: [{ type: 'text', text: `Successfully wrote binary file to ${path}` }] };
       }
 
       case 'sftp_delete': {
