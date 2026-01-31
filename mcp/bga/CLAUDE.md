@@ -37,6 +37,21 @@ src/
 
 **database.ts** - Maintains a singleton MySQL connection. Only allows read-only queries (SELECT, SHOW, DESCRIBE) for safety.
 
+## Installation
+
+Add to Claude Code:
+```bash
+claude mcp add bga-studio node /home/tom/src/agents/mcp/bga/dist/index.js
+```
+
+Or with scope:
+```bash
+claude mcp add --scope user bga-studio node ...    # All projects
+claude mcp add --scope project bga-studio node ... # Current project only
+```
+
+Verify with `claude mcp list`.
+
 ## Configuration
 
 Copy `.env.example` to `.env` and fill in BGA Studio credentials. The server reads these at runtime via dotenv.
