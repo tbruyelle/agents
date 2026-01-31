@@ -1,0 +1,23 @@
+{
+  "name": "bga-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Board Game Arena Studio development",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "dotenv": "^16.3.1",
+    "mysql2": "^3.6.5",
+    "ssh2-sftp-client": "^10.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/ssh2-sftp-client": "^9.0.3",
+    "typescript": "^5.3.2"
+  }
+}
