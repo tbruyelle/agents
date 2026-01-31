@@ -29,7 +29,9 @@ src/
 └── resources.ts  # Resource URI parsing and handlers
 ```
 
-**index.ts** - Registers tools with the MCP SDK and routes tool calls to the appropriate module. Tools: `sftp_list`, `sftp_read`, `sftp_write`, `sftp_write_base64`, `sftp_delete`, `sftp_mkdir`, `db_query`, `db_tables`, `db_describe`.
+**index.ts** - Registers tools with the MCP SDK and routes tool calls to the appropriate module. Tools: `sftp_list`, `sftp_read`, `sftp_write`, `sftp_write_base64`, `sftp_delete`, `sftp_mkdir`, `db_query`, `db_tables`, `db_describe`, `bga_scaffold`.
+
+**templates.ts** - BGA project templates for scaffolding new games. Contains all boilerplate PHP, JS, CSS, SQL files.
 
 **sftp.ts** - Maintains a singleton SFTP connection using ssh2-sftp-client. Reconnects automatically if config changes.
 

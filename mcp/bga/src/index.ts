@@ -12,6 +12,7 @@ import dotenv from 'dotenv';
 import * as sftp from './sftp.js';
 import * as db from './database.js';
 import { getFileResource, getSchemaResource, parseFileUri, parseSchemaUri } from './resources.js';
+import { generateTemplates, getDirectories } from './templates.js';
 
 dotenv.config();
 
@@ -179,6 +180,24 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ['database', 'table'],
         },
       },
+      {
+        name: 'bga_scaffold',
+        description: 'Create a new BGA game project with all template files',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            game_name: {
+              type: 'string',
+              description: 'Name of the game in lowercase (e.g., "reversi", "chess")',
+            },
+            path: {
+              type: 'string',
+              description: 'Path on BGA Studio where the project exists (e.g., "/reversi")',
+            },
+          },
+          required: ['game_name', 'path'],
+        },
+      },
     ],
   };
 });
@@ -262,6 +281,36 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           return line;
         }).join('\n');
         return { content: [{ type: 'text', text: formatted }] };
+      }
+
+      case 'bga_scaffold': {
+        const gameName = (args?.game_name as string).toLowerCase();
+        const basePath = args?.path as string;
+        const gameNameUpperFirst = gameName.charAt(0).toUpperCase() + gameName.slice(1);
+
+        const createdFiles: string[] = [];
+
+        // Create directories
+        for (const dir of getDirectories()) {
+          const dirPath = `${basePath}/${dir}`;
+          await sftp.mkdir(dirPath, true);
+          createdFiles.push(`📁 ${dir}/`);
+        }
+
+        // Create template files
+        const templates = generateTemplates(gameName, gameNameUpperFirst);
+        for (const [filename, content] of Object.entries(templates)) {
+          const filePath = `${basePath}/${filename}`;
+          await sftp.writeFile(filePath, content);
+          createdFiles.push(`📄 ${filename}`);
+        }
+
+        return {
+          content: [{
+            type: 'text',
+            text: `Successfully created BGA project "${gameName}" at ${basePath}:\n\n${createdFiles.join('\n')}`
+          }]
+        };
       }
 
       default:
