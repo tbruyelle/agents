@@ -8,13 +8,25 @@ import {
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import dotenv from 'dotenv';
+import { existsSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 
 import * as sftp from './sftp.js';
 import * as db from './database.js';
 import { getFileResource, getSchemaResource, parseFileUri, parseSchemaUri } from './resources.js';
 import { generateTemplates, getDirectories } from './templates.js';
 
-dotenv.config();
+// Load .env from project directory first, fallback to MCP server directory
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const mcpEnvPath = join(__dirname, '..', '.env');
+const projectEnvPath = join(process.cwd(), '.env');
+
+if (existsSync(projectEnvPath)) {
+  dotenv.config({ path: projectEnvPath });
+} else if (existsSync(mcpEnvPath)) {
+  dotenv.config({ path: mcpEnvPath });
+}
 
 const server = new Server(
   {

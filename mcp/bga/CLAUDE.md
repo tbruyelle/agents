@@ -54,4 +54,11 @@ Verify with `claude mcp list`.
 
 ## Configuration
 
-Copy `.env.example` to `.env` and fill in BGA Studio credentials. The server reads these at runtime via dotenv.
+Create a `.env` file with BGA Studio credentials. The server looks for `.env` in this order:
+1. Project directory (where Claude Code is running)
+2. MCP server directory (fallback)
+
+Copy `.env.example` as a template:
+```bash
+cp /home/tom/src/agents/mcp/bga/.env.example .env
+```
